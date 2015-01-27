@@ -1,0 +1,5 @@
+D:\Users\Vilhelm\AndroidStudioProjects\BitchTalkAndroid\app\build\intermediates\classes\debug
+D:\Users\Vilhelm\AndroidStudioProjects\BitchTalkAndroid\app\build\intermediates\pre-dexed\debug\support-annotations-21.0.3-27f1b815584d72f4e47ad9905e4152d741d8431b.jar
+D:\Users\Vilhelm\AndroidStudioProjects\BitchTalkAndroid\app\build\intermediates\pre-dexed\debug\internal_impl-21.0.3-819578f2933e4fddc614fa83da01419597ef6427.jar
+D:\Users\Vilhelm\AndroidStudioProjects\BitchTalkAndroid\app\build\intermediates\pre-dexed\debug\classes-649ce5189daee8f73a12ff3dee53fc457d42f5a9.jar
+D:\Users\Vilhelm\AndroidStudioProjects\BitchTalkAndroid\app\build\intermediates\pre-dexed\debug\classes-d4c6222b7854f8c0a05b6d07e43daa3f0940631b.jar
