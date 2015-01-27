@@ -29,7 +29,7 @@ public class Client {
 		context = c;	//used when checking if sounds exists
 		gui = g;
 		factory = new ClientCommandFactory(gui,this, context);
-		gui.showMessage(factory.help());
+//		gui.showMessage(factory.help());
 	}
 	
 	//TODO check that this code is correct
