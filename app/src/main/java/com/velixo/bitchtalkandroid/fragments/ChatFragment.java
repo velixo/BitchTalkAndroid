@@ -63,7 +63,8 @@ public class ChatFragment extends Fragment implements ClientGui {
                 chatWindow.append(m + "\n");
                 if (atBottom)
                     chatScroll.scrollTo(0, chatWindow.getHeight());
-                playSound(NOTIFICATION);
+                if(!notificationMuted)
+                    playSound(NOTIFICATION);
             }
         });
     }
@@ -103,14 +104,12 @@ public class ChatFragment extends Fragment implements ClientGui {
     public void playSound(String soundFileName) {
         Log.d("", "playSound: " + soundFileName);
         try {
-            if (!soundFileName.equals(NOTIFICATION) || !notificationMuted) {
-                AssetFileDescriptor afd;
-                afd = getActivity().getAssets().openFd("sounds/" + soundFileName);
-                MediaPlayer player = new MediaPlayer();
-                player.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
-                player.prepare();
-                player.start();
-            }
+            AssetFileDescriptor afd;
+            afd = getActivity().getAssets().openFd("sounds/" + soundFileName);
+            MediaPlayer player = new MediaPlayer();
+            player.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
+            player.prepare();
+            player.start();
         } catch (IOException e) {
             e.printStackTrace();
             showSilentMessage("Bitch, you aint even got " + soundFileName);
