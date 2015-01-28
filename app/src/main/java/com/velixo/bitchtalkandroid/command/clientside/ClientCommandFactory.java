@@ -1,4 +1,4 @@
-package com.velixo.bitchtalkandroid.command;
+package com.velixo.bitchtalkandroid.command.clientside;
 
 import java.io.IOException;
 import java.util.StringTokenizer;
@@ -8,6 +8,8 @@ import android.util.Log;
 
 import com.velixo.bitchtalkandroid.clientSide.Client;
 import com.velixo.bitchtalkandroid.clientSide.ClientGui;
+import com.velixo.bitchtalkandroid.command.Command;
+import com.velixo.bitchtalkandroid.command.NotACommand;
 import com.velixo.bitchtalkandroid.command.clientside.AlreadyConnected;
 import com.velixo.bitchtalkandroid.command.clientside.ClientSound;
 import com.velixo.bitchtalkandroid.command.clientside.Connect;

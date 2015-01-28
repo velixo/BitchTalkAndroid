@@ -11,7 +11,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.velixo.bitchtalkandroid.command.ClientCommandFactory;
+import com.velixo.bitchtalkandroid.command.clientside.ClientCommandFactory;
 import com.velixo.bitchtalkandroid.command.Command;
 
 public class Client {
