@@ -2,7 +2,7 @@
 
 BitchTalk, but as an Android app. Brilliant innit, bitch?
 
-Since android said "fuck it" to supporting eclipse-based android development...
+...Well, since android said "fuck it" to supporting eclipse-based android development...
 
 ### BitchTalkAndroid, now being developed in AndroidStudio!
 
