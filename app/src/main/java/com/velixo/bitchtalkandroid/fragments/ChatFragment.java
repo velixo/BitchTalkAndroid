@@ -45,12 +45,22 @@ public class ChatFragment extends Fragment implements ClientGui {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_chat, container, false);
+        loadThingsFromState(savedInstanceState);
         chatScroll = (ScrollView) rootView.findViewById(R.id.chatScroll);
         chatWindow = (TextView) rootView.findViewById(R.id.chatWindow);
         chatInput = (TextView) rootView.findViewById(R.id.chatInput);
         showMessage("type /connect <ip-address> to connect, bitch.");
         setChatInputActionListener();
         return rootView;
+    }
+
+    private void loadThingsFromState(Bundle savedInstanceState) {
+        //TODO implement
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        //TODO implement
     }
 
     @Override

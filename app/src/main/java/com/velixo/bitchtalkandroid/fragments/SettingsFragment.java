@@ -20,6 +20,16 @@ public class SettingsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_settings, container, false);
+        loadThingsFromState(savedInstanceState);
         return rootView;
+    }
+
+    private void loadThingsFromState(Bundle savedInstanceState) {
+        //TODO implement
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        //TODO implement
     }
 }

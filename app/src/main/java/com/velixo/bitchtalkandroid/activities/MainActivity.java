@@ -51,10 +51,10 @@ public class MainActivity extends ActionBarActivity {
      * Save the chatting and settings fragments.
      */
     @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
+    public void onSaveInstanceState(Bundle outState) {
         FragmentManager fragManager = getSupportFragmentManager();
-        fragManager.putFragment(savedInstanceState, ChatFragment.TAG, chatFragment);
-        fragManager.putFragment(savedInstanceState, SettingsFragment.TAG, settingsFragment);
+        fragManager.putFragment(outState, ChatFragment.TAG, chatFragment);
+        fragManager.putFragment(outState, SettingsFragment.TAG, settingsFragment);
     }
 
     public ChatFragment getChatFragment() {
