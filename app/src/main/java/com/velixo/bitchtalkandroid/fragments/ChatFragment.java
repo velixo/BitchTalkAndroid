@@ -109,15 +109,21 @@ public class ChatFragment extends Fragment implements ClientGui {
     }
 
     @Override
-    public void playSound(String soundFileName) {
-        Log.d("", "playSound: " + soundFileName);
+    public void playSound(final String soundFileName) {
         try {
+//            Log.d("", "playSound: " + soundFileName);
             AssetFileDescriptor afd;
             afd = getActivity().getAssets().openFd("sounds/" + soundFileName);
-            MediaPlayer player = new MediaPlayer();
+            final MediaPlayer player = new MediaPlayer();
             player.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
             player.prepare();
             player.start();
+            player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    player.release();
+                }
+            });
         } catch (IOException e) {
             e.printStackTrace();
             showSilentMessage("Bitch, you aint even got " + soundFileName);
