@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import com.velixo.bitchtalkandroid.R;
 
 public class SettingsFragment extends Fragment {
+    public static final String TAG = SettingsFragment.class.getSimpleName();
 
 
     public SettingsFragment() {

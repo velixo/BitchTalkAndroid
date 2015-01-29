@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.util.List;
 
 public class ChatFragment extends Fragment implements ClientGui {
+    public static final String TAG = ChatFragment.class.getSimpleName();
+
     private Client client;
     private ScrollView chatScroll;
     private TextView chatWindow;
