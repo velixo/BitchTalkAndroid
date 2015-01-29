@@ -23,10 +23,8 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if (chatFragment == null)
-            chatFragment = new ChatFragment();
-        if (settingsFragment == null)
-            settingsFragment = new SettingsFragment();
+        chatFragment = new ChatFragment();
+        settingsFragment = new SettingsFragment();
         client = new Client(chatFragment, this);
         chatFragment.addClient(client);
 
