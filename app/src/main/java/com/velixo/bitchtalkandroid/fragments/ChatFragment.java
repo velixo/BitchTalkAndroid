@@ -69,11 +69,6 @@ public class ChatFragment extends Fragment implements ClientGui {
 
             @Override
             public void run() {
-                Log.d("", "chatFragment.###############");
-                Log.d("", "chatFragment.isInLayout = " + isInLayout());
-                Log.d("", "chatFragment.isResumed = " + isResumed());
-                Log.d("", "chatFragment.isVisible = " + isVisible());
-                Log.d("", "chatFragment.isHidden = " + isHidden());
                 boolean atBottom = getChatScrollAtBottom();
                 chatWindow.append(m + "\n");
                 if (atBottom)
