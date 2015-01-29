@@ -10,3 +10,5 @@ Anyways, have some links:
 Trello board: https://trello.com/b/yag3f0C1/bitchtalk
 
 Client and Server BitchTalk on desktop: https://github.com/velixo/BitchTalk
+
+Deprecated verison: https://github.com/velixo/BitchTalkAndroidDEPRECATED
