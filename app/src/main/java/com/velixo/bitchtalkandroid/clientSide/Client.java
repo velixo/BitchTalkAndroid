@@ -24,6 +24,7 @@ public class Client {
 	private Context context;
 	private ListenForMessagesThread listenForMessagesThread = new ListenForMessagesThread();
 	private ClientCommandFactory factory;
+    private String lastServer = "";
 	
 	public Client(ClientGui g, Context c){
 		context = c;	//used when checking if sounds exists
@@ -53,9 +54,13 @@ public class Client {
 				sendAsSound(message);
 				
 			} else if(isAdminSound(message)) {
-				Log.d("", "isAdminSound, message: " + message);
-				sendAsAdminSound(message);
-			
+                Log.d("", "isAdminSound, message: " + message);
+                sendAsAdminSound(message);
+            } else if(isHiddenSound(message)) {
+                message = message.replace("/", "/hidden_");
+                Log.d("", "isAdminSound, message: " + message);
+                sendAsSound(message);
+
 			} else if(output!=null) {
 				Log.d("", "not sound, message: " + message);
 				output.writeObject(message);
@@ -73,23 +78,29 @@ public class Client {
 	
 	private boolean isSound(String input) {
 		String soundName = input.replace("/", "") + ".wav";
-		Log.d("", "isSound: " + input);
+//		Log.d("", "isSound: " + input);
 		return soundExists(soundName);
 	}
 	
 	private boolean isAdminSound(String input) {
 		String soundName = input.replace("/", "admin_") + ".wav";
-		Log.d("", "isAdminSound: " + input);
+//		Log.d("", "isAdminSound: " + input);
 		return soundExists(soundName);
 	}
+
+    private boolean isHiddenSound(String input) {
+        String soundName = input.replace("/", "hidden_") + ".wav";
+//        Log.d("", "isHiddenSound: " + input);
+        return soundExists(soundName);
+    }
 	
 	private boolean soundExists(String soundName) {
-		Log.d("", "soundExists: " + soundName);
+//		Log.d("", "soundExists: " + soundName);
 		try {
 			String[] sounds = context.getAssets().list("sounds");
-			Log.d("", "sounds: " + sounds);
+//			Log.d("", "sounds: " + sounds);
 			for (String sound : sounds) {
-				Log.d("", "soundExists: " + sound + " ?= " + soundName);
+//				Log.d("", "soundExists: " + sound + " ?= " + soundName);
 				if(sound.equals(soundName))
 					return true;
 			}
@@ -123,9 +134,19 @@ public class Client {
 			gui.showMessage("You are not connected to any server.");
 		}
 	}
-	
-	
-	
+
+    private void sendAsHiddenSound(String message) throws IOException {
+        message = message.replace("/", "/:h:");
+        if(output!=null){
+            output.writeObject(message);
+            output.flush();
+            System.out.println("flushed, bitch");
+        }
+        else{
+            gui.showMessage("You are not connected to any server.");
+        }
+    }
+
 	
 	private void closeCrap(){
 		gui.showMessage("bitch, I'm out.");
@@ -133,6 +154,7 @@ public class Client {
 			output.close();
 			input.close();
 			connection.close();
+            connect(lastServer);
          }catch(IOException ioe){
         	ioe.printStackTrace();
          }
@@ -192,6 +214,7 @@ public class Client {
 				output = new ObjectOutputStream(connection.getOutputStream());
 				output.flush();
 				input = new ObjectInputStream(connection.getInputStream());
+                lastServer = ip;
 				if (listenForMessagesThread != null)
 					listenForMessagesThread.stopThread();
 				listenForMessagesThread = new ListenForMessagesThread();

@@ -40,7 +40,10 @@ public class Help implements Command {
 			List<String> soundList = new ArrayList<String>();
 			String[] sounds = context.getAssets().list("sounds");
 			for (String sound : sounds) {
-				if (!sound.contains("other_") && !sound.contains("admin_") && !sound.contains(".raw")) { //for some reason there are two .raw files in assets. weird.
+				if(!sound.contains("other_")
+                && !sound.contains("admin_")
+                && !sound.contains("hidden_")
+                &&  sound.contains(".wav")) {
 					soundList.add(sound.replace(".wav", ""));
 				}
 			}
