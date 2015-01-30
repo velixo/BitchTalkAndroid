@@ -85,11 +85,10 @@ public class ClientCommandFactory {
 	
 	private boolean isSound(String input) {
 		String soundName = input.replace("/:", "");
-		String adminSoundName = input.replace("/:", "admin_");
 		try {
 			String[] sounds = context.getAssets().list("sounds");
 			for (String sound : sounds) {
-				if(sound.equals(soundName + ".wav") || sound.equals(adminSoundName + ".wav"))
+				if(sound.equals(soundName + ".wav"))
 					return true;
 			}
 			return false;
