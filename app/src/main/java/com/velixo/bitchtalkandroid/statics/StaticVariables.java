@@ -19,6 +19,7 @@ public abstract class StaticVariables {
 	public final static String REQUESTADMIN = "/requestadmin";
 	public final static String KICK = "/kick";
 	public final static String BITCHLIST = "/bitchlist";
+    public final static String DISCONNECT = "/disconnect";
 	//TODO add ban
 	
 //	public final static String WOOLOOLOO= "/woolooloo";

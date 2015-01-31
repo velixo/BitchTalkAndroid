@@ -24,7 +24,7 @@ public class ClientCommandFactory {
 	public final static String MUTE = StaticVariables.MUTE;
 	public final static String UNMUTE = StaticVariables.UNMUTE;
 	public final static String CONNECT = StaticVariables.CONNECT;
-	
+	public final static String DISCONNECT = StaticVariables.DISCONNECT;
 	
 	private Client client;
 	private ClientGui clientGui;
@@ -65,7 +65,9 @@ public class ClientCommandFactory {
 				return new Connect(st.nextToken(),client);
 			else
 				return new NotACommand(clientGui);
-		
+        case DISCONNECT:
+            return new Disconnect(client);
+
 		default:
 			Log.d("", "build: default. input = " + input);
 			if(isServerCommand(input)) {

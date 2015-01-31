@@ -148,25 +148,36 @@ public class Client {
     }
 
 	
-	private void closeCrap(){
-		gui.showMessage("bitch, I'm out.");
-		try{
-			output.close();
-			input.close();
-			connection.close();
-            connect(lastServer);
-         }catch(IOException ioe){
-        	ioe.printStackTrace();
-         }
+	private void closeCrapAndReconnect(){
+        Log.d("", "In Client.closeCrapAndReconnect()");
+        closeCrap();
+        connect(lastServer);
 	}
-	
-	
-	private class ListenForMessagesThread extends Thread {
+
+    public void closeCrap() {
+        Log.d("", "In Client.closeCrap()");
+        gui.showMessage("bitch, I'm out.");
+        listenForMessagesThread.stopThread();
+        try{
+            output.close();
+            input.close();
+            connection.close();
+            output = null;
+            input = null;
+            connection = null;
+        }catch(IOException ioe){
+            ioe.printStackTrace();
+        }
+    }
+
+
+    private class ListenForMessagesThread extends Thread {
 		private boolean runThread;
 		public ListenForMessagesThread() {
 			runThread = true;
 		}
-		
+
+        @Override
 		public void run() {
 			//TODO disconnect functionality
 			while(runThread) {
@@ -189,7 +200,9 @@ public class Client {
 					}
 				} catch (ClassNotFoundException | IOException e) {
 					gui.showMessage("Disconnected from server");
-					closeCrap();
+                    if(runThread){
+                        closeCrapAndReconnect();
+                    }
 					break;
 				}
 			}
@@ -199,7 +212,8 @@ public class Client {
 			runThread = false;
 		}
 	}
-	
+
+    // TODO transform this into a Thread?
 	private class ConnectTask extends AsyncTask {
 		private String ip;
 		
@@ -226,5 +240,33 @@ public class Client {
 		}
 
 	}
-	
+
+    private class AttemptConnectionThread extends Thread {
+        private int maxConnAttempts;
+        private String ip;
+        /** Time that the thread sleeps between each connection attempt, in milliseconds. */
+        private int sleepTime = 5000;
+
+        public AttemptConnectionThread(int maxConnectionAttempts, String ip) {
+            maxConnAttempts = maxConnectionAttempts;
+            this.ip = ip;
+        }
+
+        @Override
+        public void run () {
+            int connAttempts = 0;
+            while(!connected() && connAttempts < maxConnAttempts) {
+                connAttempts++;
+                ConnectTask ct = new ConnectTask(ip);
+                ct.execute();
+                try {
+                    sleep(sleepTime);
+                } catch (InterruptedException e) {
+                    Log.d("", "AttemptConnectionThread was interrupted");
+                    gui.showSilentMessage("Bitch, I'm afraid I can't let you do that.");
+                }
+            }
+        }
+
+    }
 }
