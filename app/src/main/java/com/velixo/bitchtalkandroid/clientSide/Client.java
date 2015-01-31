@@ -135,19 +135,6 @@ public class Client {
 		}
 	}
 
-    private void sendAsHiddenSound(String message) throws IOException {
-        message = message.replace("/", "/:h:");
-        if(output!=null){
-            output.writeObject(message);
-            output.flush();
-            System.out.println("flushed, bitch");
-        }
-        else{
-            gui.showMessage("You are not connected to any server.");
-        }
-    }
-
-	
 	private void closeCrapAndReconnect(){
         Log.d("", "In Client.closeCrapAndReconnect()");
         closeCrap();
