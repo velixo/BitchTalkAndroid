@@ -41,7 +41,7 @@ public class Client {
 	}
 	
 	public void connect(String ip){
-		ConnectTask ct = new ConnectTask(ip);
+		ConnectTask ct = new ConnectTask(ip, "I'm afraid I can't let you do that, bitch.");
 		ct.execute(); //TODO refactor, maybe?
 	}
 	public void send(String message){
@@ -137,8 +137,20 @@ public class Client {
 
 	private void closeCrapAndReconnect(){
         Log.d("", "In Client.closeCrapAndReconnect()");
-        closeCrap();
-        connect(lastServer);
+        gui.showMessage("Reconnecting... bitch.");
+        listenForMessagesThread.stopThread();
+        try{
+            output.close();
+            input.close();
+            connection.close();
+            output = null;
+            input = null;
+            connection = null;
+        }catch(IOException ioe){
+            ioe.printStackTrace();
+        }
+        new AttemptConnectionThread(5, lastServer).start();
+//        connect(lastServer);
 	}
 
     public void closeCrap() {
@@ -166,7 +178,6 @@ public class Client {
 
         @Override
 		public void run() {
-			//TODO disconnect functionality
 			while(runThread) {
 				try {
 					//TODO refactor this code. assuming the object is a String or a List<String> is iffy design.
@@ -203,9 +214,11 @@ public class Client {
     // TODO transform this into a Thread?
 	private class ConnectTask extends AsyncTask {
 		private String ip;
+        private String errorMessage;
 		
-		public ConnectTask(String ip) {
+		public ConnectTask(String ip, String errorMessage) {
 			 this.ip = ip;
+            this.errorMessage = errorMessage;
 		}
 
 		@Override
@@ -221,7 +234,7 @@ public class Client {
 				listenForMessagesThread = new ListenForMessagesThread();
 				listenForMessagesThread.start();
 			} catch (IOException e) {
-				gui.showMessage("I'm afraid I can't let you do that, bitch.");
+				gui.showMessage(errorMessage);
 			}
 			return null;
 		}
@@ -244,15 +257,16 @@ public class Client {
             int connAttempts = 0;
             while(!connected() && connAttempts < maxConnAttempts) {
                 connAttempts++;
-                ConnectTask ct = new ConnectTask(ip);
+                ConnectTask ct = new ConnectTask(ip, "...");
                 ct.execute();
                 try {
                     sleep(sleepTime);
                 } catch (InterruptedException e) {
                     Log.d("", "AttemptConnectionThread was interrupted");
-                    gui.showSilentMessage("Bitch, I'm afraid I can't let you do that.");
                 }
             }
+            if(!connected())
+                gui.showSilentMessage("Bitch can't reconnect, lol.");
         }
 
     }
