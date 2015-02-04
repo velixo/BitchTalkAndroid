@@ -5,6 +5,11 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.text.DateFormat;
+import java.text.FieldPosition;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import android.content.Context;
@@ -31,6 +36,18 @@ public class Client {
 		gui = g;
 		factory = new ClientCommandFactory(gui,this, context);
 //		gui.showMessage(factory.help());
+        (new Thread() {
+            public void run() {
+                while(!isInterrupted()) {
+                    dumpInfo("NO_MESSAGE", "dumpInfoThread"); //Used to make sure an infoDump is made every 5 minutes
+                    try {
+                        sleep(5*60*1000); //5 minutes
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
 	}
 	
 	//TODO check that this code is correct
@@ -45,6 +62,7 @@ public class Client {
 		ct.execute(); //TODO refactor, maybe?
 	}
 	public void send(String message){
+        dumpInfo(message, "Client.send");
 		try {
 			if (message.charAt(0) == '/' && message.charAt(1) != ':' && factory.canBuild(message)) {
 				Command c = factory.build(message);
@@ -185,6 +203,7 @@ public class Client {
 					if (received instanceof String) {
 						String message = (String) received;
 						Log.d("", "message recieved: " + message);
+                        dumpInfo(message, "Client.ListenForMessagesThread");
 						if (message.charAt(0) == '/') {
 							Command c = factory.build(message);
 							c.run();
@@ -256,6 +275,7 @@ public class Client {
         public void run () {
             int connAttempts = 0;
             while(!connected() && connAttempts < maxConnAttempts) {
+                dumpInfo("conAttemps == " + connAttempts, "Client.AttemptConnectionThread");
                 connAttempts++;
                 ConnectTask ct = new ConnectTask(ip, "...");
                 ct.execute();
@@ -269,5 +289,27 @@ public class Client {
                 gui.showSilentMessage("Bitch can't reconnect, lol.");
         }
 
+    }
+
+
+
+
+
+    private void dumpInfo(String message, String calledFrom) {
+        DateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        String time = df.format(new Date());
+        Log.d("BitchTalk", "Client.dumpInfo(), time is " + time);
+        Log.d("BitchTalk", "Client.dumpInfo.message ==" + message);
+        Log.d("BitchTalk", "Client.dumpInfo.calledFrom ==" + calledFrom);
+        Log.d("BitchTalk", "Client.lastServer ==" + lastServer);
+        Log.d("BitchTalk", "Client.connection ==" + connection);
+        Log.d("BitchTalk", "Client.input ==" + input);
+        Log.d("BitchTalk", "Client.output ==" + output);
+        Log.d("BitchTalk", "Client.context ==" + context);
+        Log.d("BitchTalk", "Client.gui ==" + gui);
+        Log.d("BitchTalk", "Client.listenForMessagesThread.getState ==" + listenForMessagesThread.getState());
+        Log.d("BitchTalk", "Client.listenForMessagesThread.isAlive ==" + listenForMessagesThread.isAlive());
+        Log.d("BitchTalk", "Client.listenForMessagesThread.isInterrupted ==" + listenForMessagesThread.isInterrupted());
+        Log.d("BitchTalk", "Client.factory ==" + factory);
     }
 }
