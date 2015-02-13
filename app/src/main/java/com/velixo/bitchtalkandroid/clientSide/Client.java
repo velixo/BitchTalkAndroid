@@ -36,7 +36,7 @@ public class Client {
         (new Thread() {
             public void run() {
                 while(!isInterrupted()) {
-                    dumpInfo("NO_MESSAGE", "dumpInfoThread"); //Used to make sure an infoDump is made every 5 minutes
+//                    dumpInfo("NO_MESSAGE", "dumpInfoThread"); //Used to make sure an infoDump is made every 5 minutes
                     try {
                         sleep(5*60*1000); //5 minutes
                     } catch (InterruptedException e) {
@@ -149,7 +149,6 @@ public class Client {
 		}
 	}
 
-    // TODO transform this into a Thread?
     private class ConnectThread extends Thread {
         private String ip;
         private String errorMessage;
@@ -171,41 +170,12 @@ public class Client {
                     listenForMessagesThread.stopThread();
                 listenForMessagesThread = new ListenForMessagesThread();
                 listenForMessagesThread.start();
-                dumpInfo("öööh venne", "Client.ConnectThread");
+//                dumpInfo("öööh venne", "Client.ConnectThread");
             } catch (IOException e) {
                 gui.showMessage(errorMessage);
             }
         }
     }
-
-	private class ConnectTask extends AsyncTask {
-		private String ip;
-        private String errorMessage;
-		
-		public ConnectTask(String ip, String errorMessage) {
-			 this.ip = ip;
-            this.errorMessage = errorMessage;
-		}
-
-		@Override
-		protected Object doInBackground(Object... params) {
-			try {
-				connection = new Socket(InetAddress.getByName(ip),9513);
-				output = new ObjectOutputStream(connection.getOutputStream());
-				output.flush();
-				input = new ObjectInputStream(connection.getInputStream());
-                lastServer = ip;
-				if (listenForMessagesThread != null)
-					listenForMessagesThread.stopThread();
-				listenForMessagesThread = new ListenForMessagesThread();
-				listenForMessagesThread.start();
-			} catch (IOException e) {
-				gui.showMessage(errorMessage);
-			}
-			return null;
-		}
-
-	}
 
     private class AttemptConnectionThread extends Thread {
         private int maxConnAttempts;
@@ -222,7 +192,7 @@ public class Client {
         public void run () {
             int connAttempts = 0;
             while(!connected() && connAttempts < maxConnAttempts) {
-                dumpInfo("conAttemps == " + connAttempts, "Client.AttemptConnectionThread");
+//                dumpInfo("conAttemps == " + connAttempts, "Client.AttemptConnectionThread");
                 connAttempts++;
                 new ConnectThread(ip, "...").start();
 //                ConnectTask ct = new ConnectTask(ip, "...");
