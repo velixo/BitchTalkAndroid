@@ -30,7 +30,7 @@ public class ChatFragment extends Fragment implements ClientGui {
 
     private boolean notificationMuted = false;
 
-    private static final String NOTIFICATION = "other_notificationsound.wav";
+    private static final String NOTIFICATION = "other_notificationsound";
 
     public ChatFragment() {
 
@@ -109,7 +109,8 @@ public class ChatFragment extends Fragment implements ClientGui {
     }
 
     @Override
-    public void playSound(final String soundFileName) {
+    public void playSound(final String soundName) {
+        String soundFileName = soundName + ".wav";
         try {
 //            Log.d("", "playSound: " + soundFileName);
             AssetFileDescriptor afd;
@@ -135,9 +136,9 @@ public class ChatFragment extends Fragment implements ClientGui {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    String message = chatInput.getText().toString();
-                    if (!message.equals("")) {
-                        client.send(message);
+                    String input = chatInput.getText().toString();
+                    if (!input.equals("")) {
+                        client.buildAndRunCommand(input);
                         chatInput.setText("");
                     }
                     return true;

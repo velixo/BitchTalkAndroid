@@ -11,5 +11,6 @@ public abstract class StaticVariables {
 	public final static String KICK = "/kick";
 	public final static String BITCHLIST = "/bitchlist";
     public final static String DISCONNECT = "/disconnect";
+    public final static String NOTACOMMANDMESSAGE = "Bitch, thats not a command!";
 	//TODO add ban
 }

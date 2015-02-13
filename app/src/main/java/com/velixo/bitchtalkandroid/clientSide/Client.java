@@ -6,18 +6,15 @@ import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.text.DateFormat;
-import java.text.FieldPosition;
-import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.velixo.bitchtalkandroid.command.clientside.ClientCommandFactory;
-import com.velixo.bitchtalkandroid.command.Command;
+import shared.command.Command;
 
 public class Client {
 	
@@ -30,11 +27,11 @@ public class Client {
 	private ListenForMessagesThread listenForMessagesThread = new ListenForMessagesThread();
 	private ClientCommandFactory factory;
     private String lastServer = "";
+    private Client me = this;
 	
 	public Client(ClientGui g, Context c){
 		context = c;	//used when checking if sounds exists
 		gui = g;
-		factory = new ClientCommandFactory(gui,this, context);
 //		gui.showMessage(factory.help());
         (new Thread() {
             public void run() {
@@ -58,101 +55,36 @@ public class Client {
 	}
 	
 	public void connect(String ip){
-		ConnectTask ct = new ConnectTask(ip, "I'm afraid I can't let you do that, bitch.");
-		ct.execute(); //TODO refactor, maybe?
-	}
-	public void send(String message){
-        dumpInfo(message, "Client.send");
-		try {
-			if (message.charAt(0) == '/' && message.charAt(1) != ':' && factory.canBuild(message)) {
-				Command c = factory.build(message);
-				c.run();
-			} else if(isSound(message)) {
-				Log.d("", "isSound, message: " + message);
-				sendAsSound(message);
-				
-			} else if(isAdminSound(message)) {
-                Log.d("", "isAdminSound, message: " + message);
-                sendAsAdminSound(message);
-            } else if(isHiddenSound(message)) {
-                message = message.replace("/", "/hidden_");
-                Log.d("", "isAdminSound, message: " + message);
-                sendAsSound(message);
-
-			} else if(output!=null) {
-				Log.d("", "not sound, message: " + message);
-				output.writeObject(message);
-				output.flush();
-			} else{
-				gui.showMessage("You are not connected to any server.");
-			}
-			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	
-	private boolean isSound(String input) {
-		String soundName = input.replace("/", "") + ".wav";
-//		Log.d("", "isSound: " + input);
-		return soundExists(soundName);
-	}
-	
-	private boolean isAdminSound(String input) {
-		String soundName = input.replace("/", "admin_") + ".wav";
-//		Log.d("", "isAdminSound: " + input);
-		return soundExists(soundName);
+        if (!connected())  {
+            lastServer = ip;
+            new ConnectThread(ip, "I'm afraid I can't let you do that, bitch.").start();
+//            ConnectTask ct = new ConnectTask(ip, "I'm afraid I can't let you do that, bitch.");
+//            ct.execute(); //TODO refactor, maybe?
+        } else {
+            gui.showSilentMessage("Bitch, you're already connected. Get a fucking grip.");
+        }
 	}
 
-    private boolean isHiddenSound(String input) {
-        String soundName = input.replace("/", "hidden_") + ".wav";
-//        Log.d("", "isHiddenSound: " + input);
-        return soundExists(soundName);
+    public void buildAndRunCommand(String input) {
+        Command c = ClientCommandFactory.build(input, context);
+        c.clientRun(this);
+    }
+
+    public void send(Command c){
+        try {
+            if(output!=null){
+                output.writeObject(c);
+                output.flush();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public ClientGui getGui() {
+        return gui;
     }
 	
-	private boolean soundExists(String soundName) {
-//		Log.d("", "soundExists: " + soundName);
-		try {
-			String[] sounds = context.getAssets().list("sounds");
-//			Log.d("", "sounds: " + sounds);
-			for (String sound : sounds) {
-//				Log.d("", "soundExists: " + sound + " ?= " + soundName);
-				if(sound.equals(soundName))
-					return true;
-			}
-			return false;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
-	
-	private void sendAsAdminSound(String message) throws IOException {
-		message = message.replace("/", "/:a:");
-		if(output!=null){
-			output.writeObject(message);
-			output.flush();
-			System.out.println("flushed, bitch");
-		}
-		else{
-			gui.showMessage("You are not connected to any server.");
-		}
-	}
-	
-	private void sendAsSound(String message) throws IOException {
-		message = message.replace("/", "/:s:");
-		if(output!=null){
-			output.writeObject(message);
-			output.flush();
-			System.out.println("flushed, bitch");
-		}
-		else{
-			gui.showMessage("You are not connected to any server.");
-		}
-	}
-
 	private void closeCrapAndReconnect(){
         Log.d("", "In Client.closeCrapAndReconnect()");
         gui.showMessage("Reconnecting... bitch.");
@@ -198,31 +130,18 @@ public class Client {
 		public void run() {
 			while(runThread) {
 				try {
-					//TODO refactor this code. assuming the object is a String or a List<String> is iffy design.
-					Object received = input.readObject();
-					if (received instanceof String) {
-						String message = (String) received;
-						Log.d("", "message recieved: " + message);
-                        dumpInfo(message, "Client.ListenForMessagesThread");
-						if (message.charAt(0) == '/') {
-							Command c = factory.build(message);
-							c.run();
-						} else {
-							gui.showMessage(message);
-						}
-					} else if (received instanceof List){
-						@SuppressWarnings("unchecked")
-						List<String> usernames = (List<String>) received;
-						gui.updateUsersWindow(usernames);
-					}
+                    Command c = (Command) input.readObject();
+                    c.clientRunRecieved(me);
 				} catch (ClassNotFoundException | IOException e) {
 					gui.showMessage("Disconnected from server");
+                    if (e instanceof ClassNotFoundException)
+                        gui.showSilentMessage("ListenForMessagesThread.CLASSNOTFOUNDEXCEPTION");
                     if(runThread){
                         closeCrapAndReconnect();
                     }
 					break;
 				}
-			}
+            }
 		}
 		
 		public void stopThread() {
@@ -231,6 +150,34 @@ public class Client {
 	}
 
     // TODO transform this into a Thread?
+    private class ConnectThread extends Thread {
+        private String ip;
+        private String errorMessage;
+
+        public ConnectThread(String ip, String errorMessage) {
+            this.ip = ip;
+            this.errorMessage = errorMessage;
+        }
+
+        @Override
+        public void run() {
+            try {
+                connection = new Socket(InetAddress.getByName(ip),9513);
+                output = new ObjectOutputStream(connection.getOutputStream());
+                output.flush();
+                input = new ObjectInputStream(connection.getInputStream());
+                lastServer = ip;
+                if (listenForMessagesThread != null)
+                    listenForMessagesThread.stopThread();
+                listenForMessagesThread = new ListenForMessagesThread();
+                listenForMessagesThread.start();
+                dumpInfo("öööh venne", "Client.ConnectThread");
+            } catch (IOException e) {
+                gui.showMessage(errorMessage);
+            }
+        }
+    }
+
 	private class ConnectTask extends AsyncTask {
 		private String ip;
         private String errorMessage;
@@ -277,8 +224,9 @@ public class Client {
             while(!connected() && connAttempts < maxConnAttempts) {
                 dumpInfo("conAttemps == " + connAttempts, "Client.AttemptConnectionThread");
                 connAttempts++;
-                ConnectTask ct = new ConnectTask(ip, "...");
-                ct.execute();
+                new ConnectThread(ip, "...").start();
+//                ConnectTask ct = new ConnectTask(ip, "...");
+//                ct.execute();
                 try {
                     sleep(sleepTime);
                 } catch (InterruptedException e) {
