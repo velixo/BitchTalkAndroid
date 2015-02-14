@@ -5,12 +5,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.StringTokenizer;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.util.Log;
 
 import com.velixo.bitchtalkandroid.command.clientside.ClientCommandFactory;
@@ -25,7 +22,6 @@ public class Client {
 	private ClientGui gui;
 	private Context context;
 	private ListenForMessagesThread listenForMessagesThread = new ListenForMessagesThread();
-	private ClientCommandFactory factory;
     private String lastServer = "";
     private Client me = this;
 	
@@ -49,10 +45,8 @@ public class Client {
 	
 	//TODO check that this code is correct
 	public boolean connected() {
-		if (connection != null)
-			return !connection.isClosed();
-		return false;
-	}
+        return connection != null && !connection.isClosed();
+    }
 	
 	public void connect(String ip){
         if (!connected())  {
@@ -66,8 +60,13 @@ public class Client {
 	}
 
     public void buildAndRunCommand(String input) {
-        Command c = ClientCommandFactory.build(input, context);
-        c.clientRun(this);
+        StringTokenizer st = new StringTokenizer(input,"+");
+        while(st.hasMoreTokens()){
+            String t = st.nextToken();
+            Log.d("","Client.buildAndRun t = " + t);
+            Command c = ClientCommandFactory.build(t, context);
+            c.clientRun(this);
+        }
     }
 
     public void send(Command c){
@@ -206,28 +205,5 @@ public class Client {
             if(!connected())
                 gui.showSilentMessage("Bitch can't reconnect, lol.");
         }
-
-    }
-
-
-
-
-
-    private void dumpInfo(String message, String calledFrom) {
-        DateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-        String time = df.format(new Date());
-        Log.d("BitchTalk", "Client.dumpInfo(), time is " + time);
-        Log.d("BitchTalk", "Client.dumpInfo.message ==" + message);
-        Log.d("BitchTalk", "Client.dumpInfo.calledFrom ==" + calledFrom);
-        Log.d("BitchTalk", "Client.lastServer ==" + lastServer);
-        Log.d("BitchTalk", "Client.connection ==" + connection);
-        Log.d("BitchTalk", "Client.input ==" + input);
-        Log.d("BitchTalk", "Client.output ==" + output);
-        Log.d("BitchTalk", "Client.context ==" + context);
-        Log.d("BitchTalk", "Client.gui ==" + gui);
-        Log.d("BitchTalk", "Client.listenForMessagesThread.getState ==" + listenForMessagesThread.getState());
-        Log.d("BitchTalk", "Client.listenForMessagesThread.isAlive ==" + listenForMessagesThread.isAlive());
-        Log.d("BitchTalk", "Client.listenForMessagesThread.isInterrupted ==" + listenForMessagesThread.isInterrupted());
-        Log.d("BitchTalk", "Client.factory ==" + factory);
     }
 }
