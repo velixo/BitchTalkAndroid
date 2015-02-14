@@ -62,7 +62,7 @@ public class Client {
     public void buildAndRunCommand(String input) {
         StringTokenizer st = new StringTokenizer(input,"+");
         while(st.hasMoreTokens()){
-            String t = st.nextToken();
+            String t = st.nextToken().trim();
             Log.d("","Client.buildAndRun t = " + t);
             Command c = ClientCommandFactory.build(t, context);
             c.clientRun(this);
