@@ -5,6 +5,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.HashMap;
 import java.util.StringTokenizer;
 
 import android.content.Context;
@@ -18,7 +19,8 @@ public class Client {
 	private Socket connection;
 	private ObjectInputStream input;
 	private ObjectOutputStream output;
-	
+
+    private HashMap<String,String> macros;
 	private ClientGui gui;
 	private Context context;
 	private ListenForMessagesThread listenForMessagesThread = new ListenForMessagesThread();
@@ -28,6 +30,7 @@ public class Client {
 	public Client(ClientGui g, Context c){
 		context = c;	//used when checking if sounds exists
 		gui = g;
+        macros = new HashMap<String,String>();
 //		gui.showMessage(factory.help());
         (new Thread() {
             public void run() {
@@ -47,7 +50,9 @@ public class Client {
 	public boolean connected() {
         return connection != null && !connection.isClosed();
     }
-	
+	public HashMap<String,String> macroMap(){
+        return macros;
+    }
 	public void connect(String ip){
         if (!connected())  {
             lastServer = ip;
@@ -60,6 +65,9 @@ public class Client {
 	}
 
     public void buildAndRunCommand(String input) {
+        if(macros.containsKey(input)){
+            input = macros.get(input);
+        }
         StringTokenizer st = new StringTokenizer(input,"+");
         while(st.hasMoreTokens()){
             String t = st.nextToken().trim();

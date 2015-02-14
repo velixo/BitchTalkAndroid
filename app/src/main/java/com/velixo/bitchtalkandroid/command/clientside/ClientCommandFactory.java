@@ -18,6 +18,7 @@ public class ClientCommandFactory {
     public final static String MUTE = StaticVariables.MUTE;
     public final static String UNMUTE = StaticVariables.UNMUTE;
     public final static String CONNECT = StaticVariables.CONNECT;
+    public final static String MACRO = StaticVariables.MACRO;
     private final static String NOT_A_SOUND = "NOT_A_SOUND";
 
     public static String help(){
@@ -41,7 +42,21 @@ public class ClientCommandFactory {
                     return new Connect(st.nextToken());
                 else
                     return new NotACommand();
-
+            case MACRO:
+                String key = "";
+                if(st.hasMoreTokens())
+                    key = st.nextToken();
+                else
+                    return new NotACommand();
+                if(st.hasMoreTokens()){
+                    StringBuilder sb = new StringBuilder();
+                    while(st.hasMoreTokens()){
+                        sb.append(st.nextToken() + " ");
+                    }
+                    return new Macro(key,sb.toString());
+                }
+                else
+                    return new NotACommand();
             default:
                 String soundName = getSoundName(input, context);
                 if(!soundName.equals(NOT_A_SOUND)) {
