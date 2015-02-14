@@ -25,7 +25,8 @@ public class Help implements Command {
                 StaticVariables.MUTE + "\n" +
                 StaticVariables.UNMUTE + "\n" +
                 StaticVariables.BITCHLIST + "\n" +
-                StaticVariables.SETNAME + "\n";
+                StaticVariables.SETNAME + "\n" +
+                StaticVariables.MACRO + "<keyword> <commands to macro separated by spaces.>\n";
         List<String> sounds = getNormalSoundNames(context);
         for(String sound : sounds) {
             help += "/" + sound + "\n";

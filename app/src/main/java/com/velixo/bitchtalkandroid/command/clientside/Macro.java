@@ -20,6 +20,8 @@ public class Macro implements Command{
         HashMap<String,String> map = c.macroMap();
 
         map.put(key,command);
+
+        c.getGui().showMessage("Bitch, I'll remember that.");
     }
 
     @Override
