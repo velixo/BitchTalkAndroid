@@ -72,7 +72,8 @@ public class Client {
         while(st.hasMoreTokens()){
             String t = st.nextToken().trim();
             Log.d("","Client.buildAndRun t = " + t);
-            Command c = ClientCommandFactory.build(t, context);
+            Command c = ClientCommandFactory.build(t,
+                    context);
             c.clientRun(this);
         }
     }

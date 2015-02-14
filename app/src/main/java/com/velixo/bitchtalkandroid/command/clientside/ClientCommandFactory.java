@@ -43,7 +43,7 @@ public class ClientCommandFactory {
                 else
                     return new NotACommand();
             case MACRO:
-                String key = "";
+                String key;
                 if(st.hasMoreTokens())
                     key = st.nextToken();
                 else

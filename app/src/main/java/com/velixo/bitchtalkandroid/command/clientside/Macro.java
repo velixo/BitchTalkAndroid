@@ -13,11 +13,12 @@ public class Macro implements Command{
 
     public Macro(String key,String command){
         this.key = key;
-        this.command = command;
+        this.command = command.replaceAll(" /","+/");
     }
     @Override
     public void clientRun(Client c) {
         HashMap<String,String> map = c.macroMap();
+
         map.put(key,command);
     }
 
