@@ -28,4 +28,12 @@ public class Macro implements Command{
     public void clientRunRecieved(Client c) {
 
     }
+
+    public String getKey() {
+        return key;
+    }
+
+    public String getCommand() {
+        return command;
+    }
 }
