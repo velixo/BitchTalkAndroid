@@ -1,6 +1,7 @@
 package com.velixo.bitchtalkandroid.entities;
 
 import android.content.Context;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,7 +64,16 @@ public class SettingsAdapter extends BaseAdapter {
         holder.macroNameView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, macro.getCommand(), Toast.LENGTH_SHORT);
+                //TODO implement correct functionality for clicks
+                Toast.makeText(context, macro.getCommand(), Toast.LENGTH_SHORT).show();
+            }
+        });
+        holder.macroNameView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                //TODO implement correct functionality for long presses
+                Toast.makeText(context, "LONGPRESS " + macro.getKey(), Toast.LENGTH_SHORT).show();
+                return true;
             }
         });
 
