@@ -11,31 +11,44 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.velixo.bitchtalkandroid.R;
+import com.velixo.bitchtalkandroid.clientSide.Client;
 import com.velixo.bitchtalkandroid.command.clientside.Macro;
 import com.velixo.bitchtalkandroid.entities.SettingsAdapter;
+import com.velixo.bitchtalkandroid.options.CreateMacro;
+import com.velixo.bitchtalkandroid.options.Option;
+import com.velixo.bitchtalkandroid.options.VolumeSettings;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.crypto.Mac;
 
 public class SettingsFragment extends Fragment {
     public static final String TAG = SettingsFragment.class.getSimpleName();
     private SettingsAdapter adapter;
     private ListView listView;
+    private Client client;
 
     public SettingsFragment() {
 
     }
+
+    public void addClient(Client client) {
+        this.client = client;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_settings, container, false);
 
-        List<Macro> macroList = new ArrayList<Macro>();
-        macroList.add(new Macro("bucken", "/connect buckensrovhal.noip.me"));
-        macroList.add(new Macro("ls", "/bitchlist"));
-        macroList.add(new Macro("annoy", "/woolooloo /bossassbitch /yee /celebrate"));
+        List<Option> options = new ArrayList<Option>();
+        options.add(new VolumeSettings(client));
+        options.add(new CreateMacro(client));
 
-        adapter = new SettingsAdapter(getActivity(), macroList);
+        List<Macro> macros = loadMacros();
+
+        adapter = new SettingsAdapter(getActivity(), client, options, macros);
         listView = (ListView) rootView.findViewById(R.id.settings_listview);
         listView.setAdapter(adapter);
         loadThingsFromState(savedInstanceState);
@@ -49,5 +62,18 @@ public class SettingsFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         //TODO implement
+    }
+
+    private List<Macro> loadMacros() {
+        //TODO implement correctly, loading from files and such
+        List<Macro> macros = new ArrayList<Macro>();
+        macros.add(new Macro("bucken", "/connect buckensrovhal.noip.me"));
+        macros.add(new Macro("ls", "/bitchlist"));
+        macros.add(new Macro("wl", "/woolooloo"));
+        macros.add(new Macro("HeresJohnny", "/open"));
+        macros.add(new Macro("hej", "hej"));
+        macros.add(new Macro("bajs", "bajs"));
+
+        return macros;
     }
 }

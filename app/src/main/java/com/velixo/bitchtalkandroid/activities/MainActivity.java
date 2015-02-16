@@ -26,6 +26,7 @@ public class MainActivity extends ActionBarActivity {
         loadFragments(savedInstanceState);
         client = new Client(chatFragment, this);
         chatFragment.addClient(client);
+        settingsFragment.addClient(client);
 
         sectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), this);
         viewPager = (ViewPager) findViewById(R.id.pager);

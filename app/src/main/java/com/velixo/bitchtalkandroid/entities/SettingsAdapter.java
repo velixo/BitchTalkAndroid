@@ -1,7 +1,7 @@
 package com.velixo.bitchtalkandroid.entities;
 
 import android.content.Context;
-import android.util.TypedValue;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,9 +10,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.velixo.bitchtalkandroid.R;
+import com.velixo.bitchtalkandroid.clientSide.Client;
 import com.velixo.bitchtalkandroid.command.clientside.Macro;
-
-import org.w3c.dom.Text;
+import com.velixo.bitchtalkandroid.options.Option;
 
 import java.util.List;
 
@@ -21,18 +21,22 @@ import java.util.List;
  */
 public class SettingsAdapter extends BaseAdapter {
     private Context context;
+    private Client client;
     private LayoutInflater inflater;
     private List<Macro> macros;
+    private List<Option> options;
 
-    public SettingsAdapter(Context context, List<Macro> macros) {
+    public SettingsAdapter(Context context, Client client,List<Option> options, List<Macro> macros) {
         this.macros = macros;
+        this.options = options;
+        this.client = client;
         this.inflater = LayoutInflater.from(context);
         this.context = context;
     }
 
     @Override
     public int getCount() {
-        return macros.size();
+        return options.size() + macros.size();
     }
 
     @Override
@@ -53,22 +57,92 @@ public class SettingsAdapter extends BaseAdapter {
             holder = new ViewHolder();
             convertView = inflater.inflate(R.layout.list_item, parent, false);
 
-            holder.macroNameView = (TextView) convertView.findViewById(R.id.setting_title);
+            holder.settingView = (TextView) convertView.findViewById(R.id.setting_title);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
+        if (position < options.size()) {
+            setSettingViewAsOption(position, holder);
+        } else {
+            setSettingViewAsMacro(position - options.size(), holder);
+        }
+
+//        final Macro macro = macros.get(position);
+//        holder.settingView.setText(macro.getKey());
+//        holder.settingView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                //TODO implement correct functionality for clicks
+////                Toast.makeText(context, macro.getCommand(), Toast.LENGTH_SHORT).show();
+//                client.buildAndRunCommand(macro.getCommand());
+//            }
+//        });
+//        holder.settingView.setOnLongClickListener(new View.OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(View v) {
+//                //TODO implement correct functionality for long presses
+//                Toast.makeText(context, "LONGPRESS " + macro.getKey(), Toast.LENGTH_SHORT).show();
+//                return true;
+//            }
+//        });
+
+        return convertView;
+    }
+
+    private void loadViewHolder(ViewHolder holder, View convertView, ViewGroup parent) {
+//        ViewHolder holder;
+
+        if (convertView == null) {
+            holder = new ViewHolder();
+            convertView = inflater.inflate(R.layout.list_item, parent, false);
+
+            holder.settingView = (TextView) convertView.findViewById(R.id.setting_title);
+            convertView.setTag(holder);
+        } else {
+            holder = (ViewHolder) convertView.getTag();
+        }
+//        return holder;
+    }
+
+    /**
+     *  Sets the ViewHolder holder up for usage as a option
+     *
+     *  @param position the position of the requested option in options
+     *  @param holder the ViewHolder on which to apply the option functionality on
+     * */
+    private void setSettingViewAsOption(int position, ViewHolder holder) {
+        final Option option = options.get(position);
+        holder.settingView.setText(option.getName());
+        holder.settingView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(context, "option " + option.getName(), Toast.LENGTH_SHORT).show();
+                //TODO implement
+            }
+        });
+    }
+
+    /**
+     *  Sets the ViewHolder holder up for usage as a macro
+     *
+     *  @param position the position of the requested macro in macros
+     *  @param holder the ViewHolder on which to apply the macro functionality on
+     * */
+    private void setSettingViewAsMacro(int position, ViewHolder holder) {
         final Macro macro = macros.get(position);
-        holder.macroNameView.setText(macro.getKey());
-        holder.macroNameView.setOnClickListener(new View.OnClickListener() {
+        Log.d("BitchTalk", "setSettingViewAsMacro: pos=" + position + " macro=" + macro.getKey());
+        holder.settingView.setText(macro.getKey());
+        holder.settingView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //TODO implement correct functionality for clicks
-                Toast.makeText(context, macro.getCommand(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(context, macro.getCommand(), Toast.LENGTH_SHORT).show();
+                client.buildAndRunCommand(macro.getCommand());
             }
         });
-        holder.macroNameView.setOnLongClickListener(new View.OnLongClickListener() {
+        holder.settingView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 //TODO implement correct functionality for long presses
@@ -76,13 +150,9 @@ public class SettingsAdapter extends BaseAdapter {
                 return true;
             }
         });
-
-        return convertView;
     }
 
     private class ViewHolder {
-        TextView macroNameView;
+        TextView settingView;
     }
-
-
 }
