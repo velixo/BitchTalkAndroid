@@ -6,8 +6,10 @@
     <TextView
         android:id="@+id/setting_title"
         android:layout_width="fill_parent"
-        android:textSize="34sp"
-        android:paddingBottom="5sp"
+        android:textSize="38sp"
+        android:paddingBottom="8sp"
+        android:clickable="true"
+        android:background="@drawable/selector"
         android:layout_height="wrap_content" />
 
 </RelativeLayout>
