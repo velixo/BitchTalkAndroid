@@ -1,6 +1,9 @@
 package com.velixo.bitchtalkandroid.entities;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +16,8 @@ import com.velixo.bitchtalkandroid.R;
 import com.velixo.bitchtalkandroid.clientSide.Client;
 import com.velixo.bitchtalkandroid.command.clientside.Macro;
 import com.velixo.bitchtalkandroid.options.Option;
+
+import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -68,26 +73,6 @@ public class SettingsAdapter extends BaseAdapter {
         } else {
             setSettingViewAsMacro(position - options.size(), holder);
         }
-
-//        final Macro macro = macros.get(position);
-//        holder.settingView.setText(macro.getKey());
-//        holder.settingView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                //TODO implement correct functionality for clicks
-////                Toast.makeText(context, macro.getCommand(), Toast.LENGTH_SHORT).show();
-//                client.buildAndRunCommand(macro.getCommand());
-//            }
-//        });
-//        holder.settingView.setOnLongClickListener(new View.OnLongClickListener() {
-//            @Override
-//            public boolean onLongClick(View v) {
-//                //TODO implement correct functionality for long presses
-//                Toast.makeText(context, "LONGPRESS " + macro.getKey(), Toast.LENGTH_SHORT).show();
-//                return true;
-//            }
-//        });
-
         return convertView;
     }
 
@@ -118,8 +103,7 @@ public class SettingsAdapter extends BaseAdapter {
         holder.settingView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "option " + option.getName(), Toast.LENGTH_SHORT).show();
-                //TODO implement
+                option.onClick();
             }
         });
     }
@@ -146,10 +130,21 @@ public class SettingsAdapter extends BaseAdapter {
             @Override
             public boolean onLongClick(View v) {
                 //TODO implement correct functionality for long presses
-                Toast.makeText(context, "LONGPRESS " + macro.getKey(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(context, "LONGPRESS " + macro.getKey(), Toast.LENGTH_SHORT).show();
+                final Dialog dialog = new MacroDialog(context, MacroDialog.EDIT_MACRO_TITLE ,macro.getKey(), macro.getCommand());
+                dialog.show();
                 return true;
             }
         });
+        applyMacroStyling(holder);
+    }
+    private void applyMacroStyling(ViewHolder holder) {
+        int vertPadding = holder.settingView.getPaddingTop();
+        int leftPadding = (int) (21 * context.getResources().getDisplayMetrics().density);
+        holder.settingView.setPadding(leftPadding, vertPadding, 0, vertPadding);
+        Typeface tf = holder.settingView.getTypeface();
+        holder.settingView.setTypeface(tf, Typeface.ITALIC);
+        holder.settingView.setTextColor(Color.parseColor("#888888"));
     }
 
     private class ViewHolder {

@@ -1,5 +1,7 @@
 package com.velixo.bitchtalkandroid.fragments;
 
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -54,6 +56,11 @@ public class SettingsFragment extends Fragment {
         loadThingsFromState(savedInstanceState);
         return rootView;
     }
+
+//    @Override
+//    public Dialog onCreateDialog(Bundle savedInstanceState) {
+//        return null;
+//    }
 
     private void loadThingsFromState(Bundle savedInstanceState) {
         //TODO implement

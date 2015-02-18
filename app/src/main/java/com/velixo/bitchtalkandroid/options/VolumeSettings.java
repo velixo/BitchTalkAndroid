@@ -18,13 +18,13 @@ public class VolumeSettings extends Option {
     }
 
     @Override
-    public void execute() {
+    public void onClick() {
         openVolumeSettingsFragment();
     }
 
     private void openVolumeSettingsFragment() {
         Context context = ((Fragment) client.getGui()).getActivity();
-        Toast.makeText(context, "openVolumeSettingsFragment" ,Toast.LENGTH_SHORT);
+        Toast.makeText(context, "openVolumeSettingsFragment" ,Toast.LENGTH_SHORT).show();
         //TODO implement
     }
 }

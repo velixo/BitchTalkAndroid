@@ -1,10 +1,12 @@
 package com.velixo.bitchtalkandroid.options;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.widget.Toast;
 
 import com.velixo.bitchtalkandroid.clientSide.Client;
+import com.velixo.bitchtalkandroid.entities.MacroDialog;
 
 /**
  * Created by Vilhelm on 2015-02-16.
@@ -19,14 +21,9 @@ public class CreateMacro extends Option {
 
 
     @Override
-    public void execute() {
-        openMacroDialog();
-    }
-
-
-    private void openMacroDialog() {
+    public void onClick() {
         Context context = ((Fragment) client.getGui()).getActivity();
-        Toast.makeText(context, "openMacroDialog", Toast.LENGTH_SHORT);
-        //TODO implement
+        Dialog dialog = new MacroDialog(context, MacroDialog.CREATE_MACRO_TITLE, "", "");
+        dialog.show();
     }
 }
