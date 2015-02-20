@@ -83,11 +83,10 @@ public class MainActivity extends ActionBarActivity {
         List<Macro> macros = loadMacros();
         macros.add(macro);
         try {
-            ObjectOutput outputStream = new ObjectOutputStream(openFileOutput(macroFileName, Context.MODE_PRIVATE));
-            outputStream.writeObject(macros);
+            saveMacrosToFile(macros);
             macrosChanged();
         } catch (IOException e) {
-            chatFragment.showSilentMessage("Could not save macro " + macro.getKey());
+            chatFragment.showSilentMessage("Could not save " + macro.getKey());
         }
     }
 
@@ -96,12 +95,27 @@ public class MainActivity extends ActionBarActivity {
         macros.remove(oldMacro);
         macros.add(newMacro);
         try {
-            ObjectOutput outputStream = new ObjectOutputStream(openFileOutput(macroFileName, Context.MODE_PRIVATE));
-            outputStream.writeObject(macros);
+            saveMacrosToFile(macros);
             macrosChanged();
         } catch (IOException e) {
             chatFragment.showSilentMessage("Could not replace " + oldMacro.getKey() + " with " + newMacro.getKey());
         }
+    }
+
+    public void deleteMacro(Macro macro) {
+        List<Macro> macros = loadMacros();
+        macros.remove(macro);
+        try {
+            saveMacrosToFile(macros);
+            macrosChanged();
+        } catch (IOException e) {
+            chatFragment.showSilentMessage("Could not delete " + macro.getKey());
+        }
+    }
+
+    private void saveMacrosToFile(List<Macro> macros) throws IOException {
+        ObjectOutput outputStream = new ObjectOutputStream(openFileOutput(macroFileName, Context.MODE_PRIVATE));
+        outputStream.writeObject(macros);
     }
 
     public List<Macro> loadMacros() {
@@ -130,5 +144,6 @@ public class MainActivity extends ActionBarActivity {
 
     private void macrosChanged() {
         onMacrosChangeListener.onMacrosChanged();
+        Log.d("BitchTalk", "MainActivity.macrosChanged()");
     }
 }

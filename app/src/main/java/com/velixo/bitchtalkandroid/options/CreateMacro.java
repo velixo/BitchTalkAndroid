@@ -51,7 +51,7 @@ public class CreateMacro extends Option {
                 activity.saveMacro(macro);
             }
         });
-        dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        dialog.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 //do nothing

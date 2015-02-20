@@ -140,7 +140,7 @@ public class SettingsAdapter extends BaseAdapter implements OnMacrosChangedListe
                 commandEditText.setText(macro.getCommand());
                 dialog.setView(dialogView);
 
-                //set the buttons of the dialog
+                //set the buttons of the macro editing dialog
                 dialog.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -151,10 +151,30 @@ public class SettingsAdapter extends BaseAdapter implements OnMacrosChangedListe
                         ((MainActivity) context).replaceMacro(macro, newMacro);
                     }
                 });
-                dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                dialog.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         //do nothing
+                    }
+                });
+                dialog.setNegativeButton("Delete", new DialogInterface.OnClickListener() { //show a new dialog checking if the user is sure they want to remove the macro
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        AlertDialog.Builder checkIfSureDialog = new AlertDialog.Builder(context);
+                        checkIfSureDialog.setMessage("Are you sure you want to delete " + macro.getKey() + "?");
+                        checkIfSureDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                ((MainActivity) context).deleteMacro(macro);
+                            }
+                        });
+                        checkIfSureDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                //do nothing
+                            }
+                        });
+                        checkIfSureDialog.show();
                     }
                 });
                 dialog.show();
