@@ -123,7 +123,6 @@ public class SettingsAdapter extends BaseAdapter {
      * */
     private void setSettingViewAsMacro(int position, ViewHolder holder) {
         final Macro macro = macros.get(position);
-        Log.d("BitchTalk", "setSettingViewAsMacro: pos=" + position + " macro=" + macro.getKey());
         holder.settingView.setText(macro.getKey());
         holder.settingView.setOnClickListener(new View.OnClickListener() {
             @Override
