@@ -1,10 +1,12 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             tools:context="com.velixo.bitchtalkandroid.fragments.VolumeSettingsFragment">
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.velixo.bitchtalkandroid.fragments.VolumeSettingsFragment">
 
     <ListView
+        android:background="#222222"
         android:id="@+id/volume_settings_list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
