@@ -8,7 +8,7 @@ import android.support.v7.app.ActionBarActivity;
 
 import com.velixo.bitchtalkandroid.R;
 import com.velixo.bitchtalkandroid.clientSide.Client;
-import com.velixo.bitchtalkandroid.entities.SectionsPagerAdapter;
+import com.velixo.bitchtalkandroid.entities.ViewPagerAdapter;
 import com.velixo.bitchtalkandroid.fragments.ChatFragment;
 import com.velixo.bitchtalkandroid.fragments.SettingsFragment;
 
@@ -16,7 +16,7 @@ public class MainActivity extends ActionBarActivity {
     private ChatFragment chatFragment;
     private SettingsFragment settingsFragment;
     private Client client;
-    private SectionsPagerAdapter sectionsPagerAdapter;
+    private ViewPagerAdapter viewPagerAdapter;
     private ViewPager viewPager;
 
     @Override
@@ -28,9 +28,9 @@ public class MainActivity extends ActionBarActivity {
         chatFragment.addClient(client);
         settingsFragment.addClient(client);
 
-        sectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), this);
+        viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), this);
         viewPager = (ViewPager) findViewById(R.id.pager);
-        viewPager.setAdapter(sectionsPagerAdapter);
+        viewPager.setAdapter(viewPagerAdapter);
     }
 
     /**

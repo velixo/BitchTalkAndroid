@@ -6,12 +6,12 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import com.velixo.bitchtalkandroid.activities.MainActivity;
 
-public class SectionsPagerAdapter extends FragmentPagerAdapter {
+public class ViewPagerAdapter extends FragmentPagerAdapter {
     private static final int CHATFRAGMENT = 0;
     private static final int SETTINGSFRAGMENT = 1;
     private MainActivity activity;
 
-    public SectionsPagerAdapter(FragmentManager fm, MainActivity activity) {
+    public ViewPagerAdapter(FragmentManager fm, MainActivity activity) {
         super(fm);
         this.activity = activity;
     }
