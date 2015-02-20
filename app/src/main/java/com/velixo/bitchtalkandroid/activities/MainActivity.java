@@ -1,16 +1,27 @@
 package com.velixo.bitchtalkandroid.activities;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 
 import com.velixo.bitchtalkandroid.R;
 import com.velixo.bitchtalkandroid.clientSide.Client;
+import com.velixo.bitchtalkandroid.command.clientside.Macro;
+import com.velixo.bitchtalkandroid.entities.OnMacrosChangedListener;
 import com.velixo.bitchtalkandroid.entities.ViewPagerAdapter;
 import com.velixo.bitchtalkandroid.fragments.ChatFragment;
 import com.velixo.bitchtalkandroid.fragments.SettingsFragment;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends ActionBarActivity {
     private ChatFragment chatFragment;
@@ -18,6 +29,8 @@ public class MainActivity extends ActionBarActivity {
     private Client client;
     private ViewPagerAdapter viewPagerAdapter;
     private ViewPager viewPager;
+    private String macroFileName = "macros.txt";
+    private OnMacrosChangedListener onMacrosChangeListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,5 +79,56 @@ public class MainActivity extends ActionBarActivity {
         return settingsFragment;
     }
 
+    public void saveMacro(Macro macro) {
+        List<Macro> macros = loadMacros();
+        macros.add(macro);
+        try {
+            ObjectOutput outputStream = new ObjectOutputStream(openFileOutput(macroFileName, Context.MODE_PRIVATE));
+            outputStream.writeObject(macros);
+            macrosChanged();
+        } catch (IOException e) {
+            chatFragment.showSilentMessage("Could not save macro " + macro.getKey());
+        }
+    }
 
+    public void replaceMacro(Macro oldMacro, Macro newMacro) {
+        List<Macro> macros = loadMacros();
+        macros.remove(oldMacro);
+        macros.add(newMacro);
+        try {
+            ObjectOutput outputStream = new ObjectOutputStream(openFileOutput(macroFileName, Context.MODE_PRIVATE));
+            outputStream.writeObject(macros);
+            macrosChanged();
+        } catch (IOException e) {
+            chatFragment.showSilentMessage("Could not replace " + oldMacro.getKey() + " with " + newMacro.getKey());
+        }
+    }
+
+    public List<Macro> loadMacros() {
+        List<Macro> macros = new ArrayList<Macro>();
+        Object readObject = null;
+        try {
+            ObjectInputStream inputStream = new ObjectInputStream(openFileInput(macroFileName));
+            readObject = inputStream.readObject();
+            macros = (List<Macro>) readObject;
+        } catch (IOException e) {
+            chatFragment.showSilentMessage("Ya got a problems loading macros, bitch.");
+        } catch (ClassNotFoundException e) {
+            chatFragment.showSilentMessage("Ya got a big problem loading macros, bitch.");
+            if (readObject != null)
+                Log.d("BitchTalk", "MainActivity.loadMacros() -> ClassNotFoundException: readObject.get" + readObject.getClass().getSimpleName());
+            else
+                Log.d("BitchTalk", "MainActivity.loadMacros() -> ClassNotFoundException: readObject == null");
+        }
+        //TODO implement
+        return macros;
+    }
+
+    public void setOnMacrosChangedListener(OnMacrosChangedListener listener) {
+        onMacrosChangeListener = listener;
+    }
+
+    private void macrosChanged() {
+        onMacrosChangeListener.onMacrosChanged();
+    }
 }

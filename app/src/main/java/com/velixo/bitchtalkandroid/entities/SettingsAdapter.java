@@ -1,22 +1,17 @@
 package com.velixo.bitchtalkandroid.entities;
 
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.velixo.bitchtalkandroid.R;
 import com.velixo.bitchtalkandroid.activities.MainActivity;
@@ -24,14 +19,12 @@ import com.velixo.bitchtalkandroid.clientSide.Client;
 import com.velixo.bitchtalkandroid.command.clientside.Macro;
 import com.velixo.bitchtalkandroid.options.Option;
 
-import org.w3c.dom.Text;
-
 import java.util.List;
 
 /**
  * Created by Vilhelm on 2015-02-15.
  */
-public class SettingsAdapter extends BaseAdapter {
+public class SettingsAdapter extends BaseAdapter implements OnMacrosChangedListener {
     private Context context;
     private Client client;
     private LayoutInflater inflater;
@@ -136,10 +129,13 @@ public class SettingsAdapter extends BaseAdapter {
                 AlertDialog.Builder dialog = new AlertDialog.Builder(context);
                 dialog.setTitle("Edit macro");
 
-                //set the text of the EditTexts in the macro edit dialog
+                //get the macro dialog and the views inside it
                 View dialogView = inflater.inflate(R.layout.macro_dialog, null);
-                EditText nameEditText = (EditText) dialogView.findViewById(R.id.macro_name_edit_text);
-                EditText commandEditText = (EditText) dialogView.findViewById(R.id.macro_command_edit_text);
+                final EditText nameEditText = (EditText) dialogView.findViewById(R.id.macro_name_edit_text);
+                final EditText commandEditText = (EditText) dialogView.findViewById(R.id.macro_command_edit_text);
+                final CheckBox returnToChatCheckBox = (CheckBox) dialogView.findViewById(R.id.macro_return_to_chat_check_box);
+
+                //set the text of the EditTexts in the macro edit dialog
                 nameEditText.setText(macro.getKey());
                 commandEditText.setText(macro.getCommand());
                 dialog.setView(dialogView);
@@ -148,15 +144,17 @@ public class SettingsAdapter extends BaseAdapter {
                 dialog.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        //TODO implement
-                        //save Macro
+                        String macroName = nameEditText.getText().toString();
+                        String macroCommand = commandEditText.getText().toString();
+                        boolean returnToChat = returnToChatCheckBox.isChecked();
+                        Macro newMacro = new Macro(macroName, macroCommand, returnToChat);
+                        ((MainActivity) context).replaceMacro(macro, newMacro);
                     }
                 });
                 dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        //TODO implement
-                        //discard any changes
+                        //do nothing
                     }
                 });
                 dialog.show();
@@ -172,6 +170,11 @@ public class SettingsAdapter extends BaseAdapter {
         Typeface tf = holder.settingView.getTypeface();
         holder.settingView.setTypeface(tf, Typeface.ITALIC);
         holder.settingView.setTextColor(Color.parseColor("#888888"));
+    }
+
+    @Override
+    public void onMacrosChanged() {
+        macros = ((MainActivity) context).loadMacros();
     }
 
     private class ViewHolder {
