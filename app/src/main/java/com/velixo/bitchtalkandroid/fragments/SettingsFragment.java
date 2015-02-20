@@ -84,4 +84,8 @@ public class SettingsFragment extends Fragment {
 
         return macros;
     }
+
+    public void saveMacro(Macro macro, boolean returnToChat) {
+        //TODO implement
+    }
 }

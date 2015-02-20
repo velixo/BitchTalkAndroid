@@ -1,18 +1,25 @@
 package com.velixo.bitchtalkandroid.entities;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.velixo.bitchtalkandroid.R;
+import com.velixo.bitchtalkandroid.activities.MainActivity;
 import com.velixo.bitchtalkandroid.clientSide.Client;
 import com.velixo.bitchtalkandroid.command.clientside.Macro;
 import com.velixo.bitchtalkandroid.options.Option;
@@ -121,17 +128,38 @@ public class SettingsAdapter extends BaseAdapter {
         holder.settingView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO implement correct functionality for clicks
-//                Toast.makeText(context, macro.getCommand(), Toast.LENGTH_SHORT).show();
                 client.buildAndRunCommand(macro.getCommand());
             }
         });
         holder.settingView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                //TODO implement correct functionality for long presses
-//                Toast.makeText(context, "LONGPRESS " + macro.getKey(), Toast.LENGTH_SHORT).show();
-                final Dialog dialog = new MacroDialog(context, MacroDialog.EDIT_MACRO_TITLE ,macro.getKey(), macro.getCommand());
+                AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+                dialog.setTitle("Edit macro");
+
+                //set the text of the EditTexts in the macro edit dialog
+                View dialogView = inflater.inflate(R.layout.macro_dialog, null);
+                EditText nameEditText = (EditText) dialogView.findViewById(R.id.macro_name_edit_text);
+                EditText commandEditText = (EditText) dialogView.findViewById(R.id.macro_command_edit_text);
+                nameEditText.setText(macro.getKey());
+                commandEditText.setText(macro.getCommand());
+                dialog.setView(dialogView);
+
+                //set the buttons of the dialog
+                dialog.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //TODO implement
+                        //save Macro
+                    }
+                });
+                dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //TODO implement
+                        //discard any changes
+                    }
+                });
                 dialog.show();
                 return true;
             }

@@ -27,4 +27,14 @@
         android:layout_marginRight="@dimen/macro_dialog_horizontal_padding"
         />
 
+    <CheckBox
+        android:id="@+id/macro_return_to_chat_check_box"
+        android:text="Return to chat window"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/macro_dialog_vertical_padding"
+        android:layout_marginLeft="@dimen/macro_dialog_horizontal_padding"
+        android:layout_marginRight="@dimen/macro_dialog_horizontal_padding"
+        />
+
 </LinearLayout>
