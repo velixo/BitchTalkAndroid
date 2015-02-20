@@ -7,9 +7,8 @@ import java.util.HashMap;
 import shared.command.Command;
 
 public class Macro implements Command{
-
-    String key;
-    String command;
+    private String key;
+    private String command;
 
     public Macro(String key,String command){
         this.key = key;
