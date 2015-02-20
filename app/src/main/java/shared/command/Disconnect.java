@@ -12,7 +12,7 @@ public class Disconnect implements Command {
 
     @Override
     public void clientRunRecieved(Client c) {
-
+        c.closeCrap();
     }
 
 }

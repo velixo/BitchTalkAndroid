@@ -78,8 +78,9 @@ public class SettingsFragment extends Fragment {
         macros.add(new Macro("ls", "/bitchlist"));
         macros.add(new Macro("wl", "/woolooloo"));
         macros.add(new Macro("HeresJohnny", "/open"));
-        macros.add(new Macro("hej", "hej"));
-        macros.add(new Macro("bajs", "bajs"));
+        macros.add(new Macro("velixo", "/setname velixo"));
+        macros.add(new Macro("voidcase", "/setname voidcase"));
+        macros.add(new Macro("dc", "/disconnect"));
 
         return macros;
     }

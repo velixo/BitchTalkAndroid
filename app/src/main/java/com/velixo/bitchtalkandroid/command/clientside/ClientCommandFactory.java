@@ -6,6 +6,7 @@ import java.util.StringTokenizer;
 import android.content.Context;
 
 import shared.command.Command;
+import shared.command.Disconnect;
 import shared.command.Message;
 import shared.command.NotACommand;
 import shared.command.Sound;
@@ -18,6 +19,7 @@ public class ClientCommandFactory {
     public final static String MUTE = StaticVariables.MUTE;
     public final static String UNMUTE = StaticVariables.UNMUTE;
     public final static String CONNECT = StaticVariables.CONNECT;
+    public final static String DISCONNECT = StaticVariables.DISCONNECT;
     public final static String MACRO = StaticVariables.MACRO;
     private final static String NOT_A_SOUND = "NOT_A_SOUND";
 
@@ -42,6 +44,10 @@ public class ClientCommandFactory {
                     return new Connect(st.nextToken());
                 else
                     return new NotACommand();
+
+            case DISCONNECT:
+                return new Disconnect();
+
             case MACRO:
                 String key;
                 if(st.hasMoreTokens())
