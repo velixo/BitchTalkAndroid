@@ -7,8 +7,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 import com.velixo.bitchtalkandroid.activities.MainActivity;
 
 public class ViewPagerAdapter extends FragmentPagerAdapter {
-    private static final int CHATFRAGMENT = 0;
-    private static final int SETTINGSFRAGMENT = 1;
+    public static final int CHATFRAGMENT = 0;
+    public static final int SETTINGSFRAGMENT = 1;
     private MainActivity activity;
 
     public ViewPagerAdapter(FragmentManager fm, MainActivity activity) {

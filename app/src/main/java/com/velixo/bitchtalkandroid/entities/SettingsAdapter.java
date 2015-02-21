@@ -120,6 +120,15 @@ public class SettingsAdapter extends BaseAdapter implements OnMacrosChangedListe
         holder.settingView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(macro.getReturnToChat()) {
+                    final MainActivity activity = (MainActivity) context;
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            activity.getViewPager().setCurrentItem(ViewPagerAdapter.CHATFRAGMENT);
+                        }
+                    });
+                }
                 client.buildAndRunCommand(macro.getCommand());
             }
         });
@@ -138,6 +147,7 @@ public class SettingsAdapter extends BaseAdapter implements OnMacrosChangedListe
                 //set the text of the EditTexts in the macro edit dialog
                 nameEditText.setText(macro.getKey());
                 commandEditText.setText(macro.getCommand());
+                returnToChatCheckBox.setChecked(macro.getReturnToChat());
                 dialog.setView(dialogView);
 
                 //set the buttons of the macro editing dialog
@@ -148,7 +158,6 @@ public class SettingsAdapter extends BaseAdapter implements OnMacrosChangedListe
                         String macroCommand = commandEditText.getText().toString();
                         boolean returnToChat = returnToChatCheckBox.isChecked();
                         Macro newMacro = new Macro(macroName, macroCommand, returnToChat);
-//                        ((MainActivity) context).replaceMacro(macro, newMacro);
                         ((MainActivity) context).deleteMacro(macro);
                         ((MainActivity) context).saveMacro(newMacro);
                     }
@@ -168,7 +177,6 @@ public class SettingsAdapter extends BaseAdapter implements OnMacrosChangedListe
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 ((MainActivity) context).deleteMacro(macro);
-                                notifyDataSetChanged();
                             }
                         });
                         checkIfSureDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -198,6 +206,7 @@ public class SettingsAdapter extends BaseAdapter implements OnMacrosChangedListe
     @Override
     public void onMacrosChanged() {
         macros = ((MainActivity) context).loadMacros();
+        notifyDataSetChanged();
     }
 
     private class ViewHolder {

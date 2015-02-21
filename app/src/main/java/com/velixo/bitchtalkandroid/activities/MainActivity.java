@@ -90,18 +90,6 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
-    public void replaceMacro(Macro oldMacro, Macro newMacro) {
-        List<Macro> macros = loadMacros();
-        macros.remove(oldMacro);
-        macros.add(newMacro);
-        try {
-            saveMacrosToFile(macros);
-            macrosChanged();
-        } catch (IOException e) {
-            chatFragment.showSilentMessage("Could not replace " + oldMacro.getKey() + " with " + newMacro.getKey());
-        }
-    }
-
     public void deleteMacro(Macro macro) {
         List<Macro> macros = loadMacros();
         macros.remove(macro);
@@ -134,8 +122,11 @@ public class MainActivity extends ActionBarActivity {
             else
                 Log.d("BitchTalk", "MainActivity.loadMacros() -> ClassNotFoundException: readObject == null");
         }
-        //TODO implement
         return macros;
+    }
+
+    public ViewPager getViewPager() {
+        return viewPager;
     }
 
     public void setOnMacrosChangedListener(OnMacrosChangedListener listener) {
