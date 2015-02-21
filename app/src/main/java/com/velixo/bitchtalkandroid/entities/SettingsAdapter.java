@@ -114,7 +114,7 @@ public class SettingsAdapter extends BaseAdapter implements OnMacrosChangedListe
      *  @param position the position of the requested macro in macros
      *  @param holder the ViewHolder on which to apply the macro functionality on
      * */
-    private void setSettingViewAsMacro(int position, ViewHolder holder) {
+    private void setSettingViewAsMacro(int position, final ViewHolder holder) {
         final Macro macro = macros.get(position);
         holder.settingView.setText(macro.getKey());
         holder.settingView.setOnClickListener(new View.OnClickListener() {
@@ -148,7 +148,9 @@ public class SettingsAdapter extends BaseAdapter implements OnMacrosChangedListe
                         String macroCommand = commandEditText.getText().toString();
                         boolean returnToChat = returnToChatCheckBox.isChecked();
                         Macro newMacro = new Macro(macroName, macroCommand, returnToChat);
-                        ((MainActivity) context).replaceMacro(macro, newMacro);
+//                        ((MainActivity) context).replaceMacro(macro, newMacro);
+                        ((MainActivity) context).deleteMacro(macro);
+                        ((MainActivity) context).saveMacro(newMacro);
                     }
                 });
                 dialog.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
@@ -166,6 +168,7 @@ public class SettingsAdapter extends BaseAdapter implements OnMacrosChangedListe
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 ((MainActivity) context).deleteMacro(macro);
+                                notifyDataSetChanged();
                             }
                         });
                         checkIfSureDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
