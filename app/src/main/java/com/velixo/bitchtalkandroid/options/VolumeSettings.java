@@ -1,9 +1,7 @@
 package com.velixo.bitchtalkandroid.options;
 
-import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.widget.Toast;
 
 import com.velixo.bitchtalkandroid.R;
 import com.velixo.bitchtalkandroid.activities.MainActivity;
@@ -29,6 +27,7 @@ public class VolumeSettings extends Option {
     private void openVolumeSettingsFragment() {
         MainActivity activity= (MainActivity) ((Fragment) client.getGui()).getActivity();
         FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         transaction.replace(R.id.main_activity_content, new VolumeSettingsFragment());
         transaction.addToBackStack(null);
         transaction.commit();
