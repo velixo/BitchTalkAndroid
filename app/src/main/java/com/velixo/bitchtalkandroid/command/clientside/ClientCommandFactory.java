@@ -1,9 +1,11 @@
 package com.velixo.bitchtalkandroid.command.clientside;
 
+import android.content.Context;
+
+import com.velixo.bitchtalkandroid.statics.StaticVariables;
+
 import java.io.IOException;
 import java.util.StringTokenizer;
-
-import android.content.Context;
 
 import shared.command.Command;
 import shared.command.Disconnect;
@@ -11,11 +13,11 @@ import shared.command.Message;
 import shared.command.NotACommand;
 import shared.command.Sound;
 import shared.command.UnrecognizedCommand;
-import com.velixo.bitchtalkandroid.statics.StaticVariables;
 
 
 public class ClientCommandFactory {
     public final static String HELP = StaticVariables.HELP;
+    public final static String BARKS= StaticVariables.BARKS;
     public final static String MUTE = StaticVariables.MUTE;
     public final static String UNMUTE = StaticVariables.UNMUTE;
     public final static String CONNECT = StaticVariables.CONNECT;
@@ -32,6 +34,9 @@ public class ClientCommandFactory {
         switch (st.nextToken()) {
             case HELP:
                 return new Help();
+
+            case BARKS:
+                return new Barks();
 
             case MUTE:
                 return new Mute();
